@@ -6,6 +6,7 @@ namespace EmuConfigurator
     {
         static Profile loadedProfile;
         static LaunchProfile loadedLauncher;
+        static String romPath;
 
         static void Main(string[] args)
         {
@@ -80,8 +81,7 @@ namespace EmuConfigurator
                 loadedProfile = Manager.ProfileManager.loadProfile(LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE));
             } else if(loadedLauncher != null)
             {
-                //Load from JSON file
-                //loadedProfile = Manager.ProfileManager.loadProfile(loadedLauncher)
+                loadedProfile = Manager.ProfileManager.loadProfile(loadedLauncher.ProfileId);
             }
             
             return null;
