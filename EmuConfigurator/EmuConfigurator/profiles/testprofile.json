@@ -1,0 +1,7 @@
+{
+  "EmulatorId": "testemu",
+  "ControlId": "<NOT YET IMPLEMENTED>",
+  "SettingOverrides": {
+    "-example2": "value"
+  }
+}

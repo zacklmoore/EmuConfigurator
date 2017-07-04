@@ -1,11 +1,15 @@
-﻿using System;
+﻿using EmuConfigurator.Model;
+using System;
+using System.Text.RegularExpressions;
 
 namespace EmuConfigurator
 {
     class Program
     {
         static Profile loadedProfile;
-        static LaunchProfile loadedLauncher;
+        static Emulator loadedEmulator;
+        static Launcher launcher;
+        static LaunchProfile loadedLaunchProf;
         static String romPath;
 
         static void Main(string[] args)
@@ -15,6 +19,10 @@ namespace EmuConfigurator
 
             //Load Settings
             Manager.SettingManager.loadSettingsFile();
+
+            //Check Directories
+            Manager.ProfileManager.createProfileDirectory();
+            Manager.EmulatorManager.createEmulatorDirectory();
 
             //Process Launch Options
             if(args.Length == 0)
@@ -28,9 +36,20 @@ namespace EmuConfigurator
             //Handle Launch Options
             handleOptions();
 
+            //Eexecute
+            if(loadedProfile != null && loadedEmulator != null)
+            {
+                launcher = new Launcher(loadedProfile, loadedEmulator, romPath);
+
+                launcher.launch();
+            }
+            
             //Wait for input
-            Console.WriteLine("Press any key to continue. ALSO REMOVE THIS AFTER DEVELOPMENT!!!!!!!!");
-            Console.ReadKey();
+            if(launcher == null)
+            {
+                Console.WriteLine("Press any key to continue. ALSO REMOVE THIS AFTER DEVELOPMENT!!!!!!!!");
+                Console.ReadKey();
+            }
         }
 
         private static void handleOptions()
@@ -56,6 +75,9 @@ namespace EmuConfigurator
                 {
                     System.Console.WriteLine("Error when executing profile. Error: " + status);
                 }
+            } else if (LaunchOptions.getOptionValue(LaunchOptions.Option.CREATE) != null)
+            {
+                String status = handleCreate();
             }
         }
 
@@ -65,7 +87,7 @@ namespace EmuConfigurator
 
             if (System.IO.File.Exists(pathString))
             {
-                loadedLauncher = Newtonsoft.Json.JsonConvert.DeserializeObject<LaunchProfile>(System.IO.File.ReadAllText(pathString));
+                loadedLaunchProf = Newtonsoft.Json.JsonConvert.DeserializeObject<LaunchProfile>(System.IO.File.ReadAllText(pathString));
             } else
             {
                 return @"Unable to open file: " + pathString;
@@ -79,12 +101,77 @@ namespace EmuConfigurator
             if (LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE) != null)
             {
                 loadedProfile = Manager.ProfileManager.loadProfile(LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE));
-            } else if(loadedLauncher != null)
+            } else if(loadedLaunchProf != null)
             {
-                loadedProfile = Manager.ProfileManager.loadProfile(loadedLauncher.ProfileId);
+                loadedProfile = Manager.ProfileManager.loadProfile(loadedLaunchProf.ProfileId);
+            }
+
+            if(loadedProfile != null)
+            {
+                loadedEmulator = Manager.EmulatorManager.loadEmulator(loadedProfile.EmulatorId);
             }
             
             return null;
         }
+
+        private static String handleCreate()
+        {
+            String createString = LaunchOptions.getOptionValue(LaunchOptions.Option.CREATE);
+
+            if(createString.ToLower().CompareTo("profile") == 0)
+            {
+                String profName = "";
+                do
+                {
+                    System.Console.WriteLine("Enter New Profile ID: ");
+                    profName = System.Console.ReadLine();
+
+                    while (!IsValidFilename(profName))
+                    {
+                        System.Console.WriteLine("\nInvalid Profile ID.\n\nEnter New Profile ID: ");
+                        profName = System.Console.ReadLine();
+                    }
+                } while (!Manager.ProfileManager.createProfile(profName));
+            }
+
+            if (createString.ToLower().CompareTo("emulator") == 0)
+            {
+                String emuName = "";
+                do
+                {
+                    System.Console.WriteLine("Enter New Emulator ID: ");
+                    emuName = System.Console.ReadLine();
+
+                    while (!IsValidFilename(emuName))
+                    {
+                        System.Console.WriteLine("\nInvalid Emulator ID.\n\nEnter New Emulator ID: ");
+                        emuName = System.Console.ReadLine();
+                    }
+                } while (!Manager.EmulatorManager.createEmulator(emuName));
+            }
+
+            return "";
+        }
+
+        private static Launcher buildLauncher()
+        {
+            if(loadedProfile != null)
+            {
+               // Launcher returnLauncher = new Launcher(Lo);
+
+            }
+
+            return null;
+        }
+
+        private static bool IsValidFilename(string testName)
+        {
+            Regex containsABadCharacter = new Regex("["
+                  + Regex.Escape(new string(System.IO.Path.GetInvalidPathChars())) + "]");
+            if (containsABadCharacter.IsMatch(testName)) { return false; };
+            
+            return true;
+        }
+
     }
 }

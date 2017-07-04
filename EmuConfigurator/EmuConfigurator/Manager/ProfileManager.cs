@@ -80,5 +80,62 @@ namespace EmuConfigurator.Manager
 
             return null;
         }
+
+        public static bool createProfile(String id)
+        {
+            String profPath = getProfilePath(id);
+            String error = "";
+            bool returnVal = false;
+
+            if (profPath != null)
+            {
+                if (!System.IO.File.Exists(profPath))
+                {
+                    Profile newProf = new Profile();
+                    returnVal = saveProfile(newProf, id);
+                    return returnVal;
+                }
+                else
+                {
+                    error = "Profile already exists with this id.";
+                }
+            }
+            else
+            {
+                error = "";
+            }
+
+            System.Console.WriteLine(error);
+
+            return returnVal;
+        }
+
+        public static bool saveProfile(Profile prof, String id)
+        {
+            String profPath = getProfilePath(id);
+
+            if (profPath != null)
+            {
+                System.IO.StreamWriter profFile = System.IO.File.CreateText(profPath);
+                profFile.Write(Newtonsoft.Json.JsonConvert.SerializeObject(prof, Newtonsoft.Json.Formatting.Indented));
+                profFile.Dispose();
+                return true;
+            }
+
+            return false;
+        }
+
+        public static void createProfileDirectory()
+        {
+            String profileDir = SettingManager.getSettingValue("profileDirectory");
+
+            if (profileDir != null)
+            {
+                if (!System.IO.Directory.Exists(profileDir))
+                {
+                    System.IO.Directory.CreateDirectory(profileDir);
+                }
+            }
+        }
     }
 }

@@ -26,14 +26,21 @@ namespace EmuConfigurator.Manager
             {
                 Dictionary<String, String> loaded = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<String, String> >(System.IO.File.ReadAllText(SETTINGS_FILE_PATH));
 
-                foreach(String key in loaded.Keys)
+                if(loaded != null)
                 {
-                    settings[key] = loaded[key];
+                    foreach (String key in loaded.Keys)
+                    {
+                        settings[key] = loaded[key];
+                    }
+                } else
+                {
+                    System.Console.WriteLine("Failed to open settings file for writing.");
                 }
             } else
             {
                 System.IO.StreamWriter settingFile = System.IO.File.CreateText(SETTINGS_FILE_PATH);
-                settingFile.Write(Newtonsoft.Json.JsonConvert.SerializeObject(settings));
+                settingFile.Write(Newtonsoft.Json.JsonConvert.SerializeObject(settings, Newtonsoft.Json.Formatting.Indented));
+                settingFile.Dispose();
             }
         }
 
