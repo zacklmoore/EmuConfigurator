@@ -121,6 +121,13 @@ namespace EmuConfigurator.Manager
 
             if (emuPath != null)
             {
+                String emuDirectoryWithSubDirs = emuPath.Replace('\\', '/').Substring(0, emuPath.LastIndexOf('/'));
+
+                if (!System.IO.Directory.Exists(emuDirectoryWithSubDirs))
+                {
+                    System.IO.Directory.CreateDirectory(emuDirectoryWithSubDirs);
+                }
+
                 System.IO.StreamWriter emuFile = System.IO.File.CreateText(emuPath);
                 emuFile.Write(Newtonsoft.Json.JsonConvert.SerializeObject(emu, Newtonsoft.Json.Formatting.Indented));
                 emuFile.Dispose();

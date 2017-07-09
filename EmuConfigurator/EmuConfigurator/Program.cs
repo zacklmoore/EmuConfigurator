@@ -100,14 +100,19 @@ namespace EmuConfigurator
         {
             if (LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE) != null)
             {
+                String profileId = LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE);
+                profileId.Replace("\"", "");
                 loadedProfile = Manager.ProfileManager.loadProfile(LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE));
             } else if(loadedLaunchProf != null)
             {
+                String profileId = loadedLaunchProf.ProfileId;
+                profileId.Replace("\"", "");
                 loadedProfile = Manager.ProfileManager.loadProfile(loadedLaunchProf.ProfileId);
             }
 
             if(loadedProfile != null)
             {
+                String emuId = loadedProfile.EmulatorId.Replace("\"", "");
                 loadedEmulator = Manager.EmulatorManager.loadEmulator(loadedProfile.EmulatorId);
             }
             
@@ -152,18 +157,7 @@ namespace EmuConfigurator
 
             return "";
         }
-
-        private static Launcher buildLauncher()
-        {
-            if(loadedProfile != null)
-            {
-               // Launcher returnLauncher = new Launcher(Lo);
-
-            }
-
-            return null;
-        }
-
+        
         private static bool IsValidFilename(string testName)
         {
             Regex containsABadCharacter = new Regex("["

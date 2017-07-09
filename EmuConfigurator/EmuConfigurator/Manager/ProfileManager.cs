@@ -116,6 +116,13 @@ namespace EmuConfigurator.Manager
 
             if (profPath != null)
             {
+                String profDirectoryWithSubDirs = profPath.Replace('\\', '/').Substring(0, profPath.LastIndexOf('/'));
+
+                if (!System.IO.Directory.Exists(profDirectoryWithSubDirs))
+                {
+                    System.IO.Directory.CreateDirectory(profDirectoryWithSubDirs);
+                }
+
                 System.IO.StreamWriter profFile = System.IO.File.CreateText(profPath);
                 profFile.Write(Newtonsoft.Json.JsonConvert.SerializeObject(prof, Newtonsoft.Json.Formatting.Indented));
                 profFile.Dispose();
