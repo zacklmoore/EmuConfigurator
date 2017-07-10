@@ -139,13 +139,13 @@ namespace EmuConfigurator.Manager
 
         public static void createEmulatorDirectory()
         {
-            String profileDir = SettingManager.getSettingValue("emulatorDirectory");
+            String emuDir = SettingManager.getSettingValue("emulatorDirectory");
 
-            if (profileDir != null)
+            if (emuDir != null)
             {
-                if (!System.IO.Directory.Exists(profileDir))
+                if (!System.IO.Directory.Exists(emuDir))
                 {
-                    System.IO.Directory.CreateDirectory(profileDir);
+                    System.IO.Directory.CreateDirectory(emuDir);
                 }
             }
         }

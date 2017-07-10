@@ -1,5 +1,6 @@
 ﻿using EmuConfigurator.Model;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace EmuConfigurator
@@ -23,6 +24,7 @@ namespace EmuConfigurator
             //Check Directories
             Manager.ProfileManager.createProfileDirectory();
             Manager.EmulatorManager.createEmulatorDirectory();
+            Manager.MapperManager.createRomProfileMapperDirectory();
 
             //Process Launch Options
             if(args.Length == 0)
@@ -78,6 +80,9 @@ namespace EmuConfigurator
             } else if (LaunchOptions.getOptionValue(LaunchOptions.Option.CREATE) != null)
             {
                 String status = handleCreate();
+            } else if (LaunchOptions.getOptionValue(LaunchOptions.Option.MAPGEN) != null)
+            {
+                String status = handleMapGen();
             }
         }
 
@@ -153,6 +158,60 @@ namespace EmuConfigurator
                         emuName = System.Console.ReadLine();
                     }
                 } while (!Manager.EmulatorManager.createEmulator(emuName));
+            }
+
+            if (createString.ToLower().CompareTo("mapper") == 0)
+            {
+                String mapName = "";
+                do
+                {
+                    System.Console.WriteLine("Enter New Mapper ID: ");
+                    mapName = System.Console.ReadLine();
+
+                    while (!IsValidFilename(mapName))
+                    {
+                        System.Console.WriteLine("\nInvalid Mapper ID.\n\nEnter New Mapper ID: ");
+                        mapName = System.Console.ReadLine();
+                    }
+                } while (!Manager.MapperManager.createRomProfileMapper(mapName));
+            }
+
+            return "";
+        }
+
+        private static string handleMapGen()
+        {
+            String mapId = LaunchOptions.getOptionValue(LaunchOptions.Option.MAPGEN);
+            List<string> mapperIdList = new List<string>();
+            List<RomProfileMapper> mapperList = new List<RomProfileMapper>();
+
+            if(mapId != null)
+            {
+                if (mapId.Trim() == "*")
+                {
+                    mapperIdList.AddRange(System.IO.Directory.GetFiles(Manager.SettingManager.getSettingValue("romProfileMapperDirecotry")));
+                }
+                else
+                {
+                    mapperIdList.Add(mapId);
+                }
+
+                if (mapperIdList.Count > 0)
+                {
+                    foreach (String id in mapperIdList)
+                    {
+                        mapperList.Add(Manager.MapperManager.loadMapper(id));
+                    }
+
+                    if(mapperList.Count > 0)
+                    {
+                        foreach(RomProfileMapper map in mapperList)
+                        {
+                            map.generateMapFiles();
+                        }
+                    }
+                }
+                    
             }
 
             return "";

@@ -16,6 +16,7 @@ namespace EmuConfigurator.Manager
 
             settings.Add("profileDirectory", "./profiles/");
             settings.Add("emulatorDirectory", "./emulators/");
+            settings.Add("romProfileMapperDirecotry", "./mappers/");
         }
 
         public static void loadSettingsFile()

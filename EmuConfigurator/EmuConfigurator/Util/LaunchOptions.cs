@@ -14,7 +14,8 @@ namespace EmuConfigurator
             PROFILE = 1,
             ROM = 2,
             JSON = 3,
-            CREATE = 4
+            CREATE = 4,
+            MAPGEN = 5
         };
 
         public static dynamic getOptionValue(Option option)
@@ -137,7 +138,12 @@ namespace EmuConfigurator
 
             options.Add(new LaunchOption(
                 "create",
-                "The type of file to create. Possibilities: Emulator, Profile",
+                "The type of file to create. Options (case-insensitive): Emulator, Profile, Mapper",
+                typeof(String)));
+
+            options.Add(new LaunchOption(
+                "mapgen",
+                "Generates rom-profile map files using the specified mapper id. Use id * to generate map files for all mappers.",
                 typeof(String)));
         }
     }

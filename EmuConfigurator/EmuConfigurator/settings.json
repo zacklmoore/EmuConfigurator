@@ -1,4 +1,5 @@
 {
   "profileDirectory": "./profiles/",
-  "emulatorDirectory": "./emulators/"
+  "emulatorDirectory": "./emulators/",
+  "romProfileMapperDirecotry": "./mappers/"
 }
