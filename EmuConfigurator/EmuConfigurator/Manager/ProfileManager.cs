@@ -91,7 +91,7 @@ namespace EmuConfigurator.Manager
             {
                 if (!System.IO.File.Exists(profPath))
                 {
-                    Profile newProf = new Profile();
+                    Profile newProf = new Profile(true);
                     returnVal = saveProfile(newProf, id);
                     return returnVal;
                 }

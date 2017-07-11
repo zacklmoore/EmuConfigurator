@@ -16,8 +16,13 @@ namespace EmuConfigurator
 
         public Profile()
         {
+           
+        }
+
+        public Profile(bool isNew)
+        {
             emulatorId = "<insert emulator ID here>";
-           // controlId = "<NOT YET IMPLEMENTED>";
+            // controlId = "<NOT YET IMPLEMENTED>";
             SettingOverrides = new Dictionary<String, String>();
             SettingOverrides.Add("-Example", "value");
         }

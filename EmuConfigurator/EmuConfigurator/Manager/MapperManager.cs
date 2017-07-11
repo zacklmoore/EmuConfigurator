@@ -96,7 +96,7 @@ namespace EmuConfigurator.Manager
             {
                 if (!System.IO.File.Exists(mapPath))
                 {
-                    RomProfileMapper newMap = new RomProfileMapper();
+                    RomProfileMapper newMap = new RomProfileMapper(true);
                     returnVal = saveRomProfileMapper(newMap, id);
                     return returnVal;
                 }

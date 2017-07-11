@@ -1,0 +1,6 @@
+{
+  "EmulatorId": "testemu",
+  "SettingOverrides": {
+    "-ExampleSetting": "value"
+  }
+}

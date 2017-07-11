@@ -14,6 +14,11 @@ namespace EmuConfigurator
 
         public Emulator()
         {
+            
+        }
+
+        public Emulator(bool isNew)
+        {
             launchCommand = "<insert launch command here>";
             launchProps = new Dictionary<string, string>();
             launchProps.Add("-example", "%ROM%");

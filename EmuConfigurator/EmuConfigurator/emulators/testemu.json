@@ -1,6 +1,7 @@
 {
   "LaunchCommand": "notepad.exe",
   "LaunchProps": {
-    "-example": "%ROM%"
+	"-Example": "blah",
+    "-Example2": "%ROM%"
   }
 }

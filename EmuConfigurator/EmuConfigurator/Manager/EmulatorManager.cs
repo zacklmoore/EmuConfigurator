@@ -96,7 +96,7 @@ namespace EmuConfigurator.Manager
             {
                 if (!System.IO.File.Exists(emuPath))
                 {
-                    Emulator newEmu = new Emulator();
+                    Emulator newEmu = new Emulator(true);
                     returnVal = saveEmulator(newEmu, id);
                     return returnVal;
                 }
