@@ -54,7 +54,7 @@ namespace EmuConfigurator {
                     System.IO.Directory.CreateDirectory(map.outputDir);
                 }
 
-                //2. Loop through map inputs and get files
+                //2. Loop through map inputs and get files/dirs
                 List<string> fileNames = new List<string>();
                 foreach(string romPath in map.romPaths)
                 {
@@ -64,24 +64,40 @@ namespace EmuConfigurator {
                     
                     if (System.IO.Directory.Exists(directory))
                     {
-                        System.IO.SearchOption option = System.IO.SearchOption.AllDirectories;
-                        if (fileName == "*" && map.recursiveSubDirectories)
+                        if (!map.romsAreDirectories)
                         {
-                            option = System.IO.SearchOption.AllDirectories;
-                        }
+                            System.IO.SearchOption option = System.IO.SearchOption.AllDirectories;
+                            if (fileName == "*" && map.recursiveSubDirectories)
+                            {
+                                option = System.IO.SearchOption.AllDirectories;
+                            }
 
-                        fileNames.AddRange(System.IO.Directory.GetFiles(directory, fileNameWithExtension, option));
+                            fileNames.AddRange(System.IO.Directory.GetFiles(directory, fileNameWithExtension, option));
+                        } else
+                        {
+                            fileNames.AddRange(System.IO.Directory.GetDirectories(directory));
+                        }
+                        
                     }
                 }
 
                 //3. Generate Output Files
                 foreach(string file in fileNames)
                 {
-                    //Output Path
-                    string extension = System.IO.Path.GetExtension(file);
-                    string fileName = System.IO.Path.GetFileNameWithoutExtension(file);
-                    string outFile = fileName + (map.retainExtension ? extension : extension + ".ecmap");
-
+                    //Output File Name
+                    string outFile = "";
+                    if (!map.romsAreDirectories)
+                    {
+                        string extension = System.IO.Path.GetExtension(file);
+                        string fileName = System.IO.Path.GetFileNameWithoutExtension(file);
+                        outFile = fileName + (map.retainExtension ? extension : extension + ".ecmap");
+                    }
+                    else
+                    {
+                        string folderName = System.IO.Path.GetFileName(file);
+                        outFile = folderName + ".ecmap";
+                    }
+                    
                     //Output Profile
                     LaunchProfile romProfile = new LaunchProfile();
                     romProfile.ProfileId = map.profileId;
