@@ -1,13 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
-    <ApplicationIcon />
+    <OutputType>exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
     <Win32Resource />
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>zacklmoore.pfx</AssemblyOriginatorKeyFile>
+    <ApplicationManifest>emuconfigurator.manifest</ApplicationManifest>
+    <OutputTypeEx>exe</OutputTypeEx>
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="emuconfigurator.manifest" />
     <None Remove="readme.txt" />
   </ItemGroup>
 
@@ -15,6 +21,12 @@
     <Content Include="readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="emuconfigurator.manifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

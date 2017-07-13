@@ -57,8 +57,6 @@ namespace EmuConfigurator
                             String argValue = args[argIndex + 1];
 
                             argValue = argValue.Trim();
-                            argValue = argValue.Replace("\"", "");
-                            argValue = argValue.Replace("'", "");
 
                             if (argValue.StartsWith("--"))
                             {

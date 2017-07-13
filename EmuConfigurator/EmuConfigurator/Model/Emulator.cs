@@ -43,6 +43,16 @@ namespace EmuConfigurator
             //Add rom file to launchCommand
             Dictionary<String, String> changeProps = new Dictionary<string, string>();
 
+            //Warp rom file in quotes to pass as arg (if not already wrapped)
+            if((romFile.Trim().StartsWith('"') || romFile.Trim().StartsWith('\'')) && (romFile.Trim().StartsWith('"') || romFile.Trim().StartsWith('\''))){
+
+            } else
+            {
+                romFile = romFile.Trim().Insert(0, "\"");
+                romFile = romFile.Insert(romFile.Length, "\"");
+            }
+
+            //Replace %ROM% String with ROM
             if (launchProps.ContainsValue("%ROM%"))
             {
                 foreach(KeyValuePair<String, String> entry in launchProps)

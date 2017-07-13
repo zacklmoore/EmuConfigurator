@@ -13,15 +13,23 @@ namespace EmuConfigurator.Model
         public Launcher(Profile profile, Emulator emulator, string romFile)
         {
             Emulator launchEmu = emulator.applyProfile(profile).setRomFile(romFile);
-            
+
             processInfo = new ProcessStartInfo(launchEmu.LaunchCommand, launchEmu.getLaunchPropsString());
+            processInfo.UseShellExecute = true;
+            processInfo.Verb = "runas";
         }
 
         public string launch()
         {
-            launchProcess = Process.Start(processInfo);
-            launchProcess.WaitForExit();
-            return launchProcess.ExitCode.ToString();
+            try
+            {
+                launchProcess = Process.Start(processInfo);
+                launchProcess.WaitForExit();
+                return null;
+            } catch(Exception e)
+            {
+                return e.Message;
+            }
         }
     }
 }

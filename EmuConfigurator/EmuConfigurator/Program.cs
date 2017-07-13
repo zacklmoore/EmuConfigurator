@@ -53,12 +53,16 @@ namespace EmuConfigurator
             //Execute
             if(launcher != null)
             {
-                launcher.launch();
+                string status = launcher.launch();
+
+                if(status != null)
+                {
+                    Console.WriteLine("An error occurred while executing the launch command: " + status);
+                    Console.ReadKey();
+                }
             } else if(doLaunch)
             {
                 //Pause to show error
-                Console.WriteLine("An error occurred. Press any key to continue.");
-                Console.WriteLine("DEBUG. WORKING DIR: " + System.IO.Directory.GetCurrentDirectory());
                 Console.ReadKey();
             }
 
@@ -80,26 +84,31 @@ namespace EmuConfigurator
 
                 return;
             }
-            else if (LaunchOptions.getOptionValue(LaunchOptions.Option.JSON) != null)
+
+            if (LaunchOptions.getOptionValue(LaunchOptions.Option.JSON) != null)
             {
                 String status = loadJson();
                 doLaunch = true;
             }
-            else if (LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE) != null)
+
+            if (LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE) != null)
             {
                 loadedLaunchProf.ProfileId = LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE);
                 doLaunch = true;
             }
-            else if (LaunchOptions.getOptionValue(LaunchOptions.Option.ROM) != null)
+
+            if (LaunchOptions.getOptionValue(LaunchOptions.Option.ROM) != null)
             {
-                loadedLaunchProf.RomPath = LaunchOptions.getOptionValue(LaunchOptions.Option.ROM);
+                loadedLaunchProf.RomPath = LaunchOptions.getOptionValue(LaunchOptions.Option.ROM).Replace("\\", "/");
                 doLaunch = true;
             }
-            else if (LaunchOptions.getOptionValue(LaunchOptions.Option.CREATE) != null)
+
+            if (LaunchOptions.getOptionValue(LaunchOptions.Option.CREATE) != null)
             {
                 String status = handleCreate();
             }
-            else if (LaunchOptions.getOptionValue(LaunchOptions.Option.MAPGEN) != null)
+
+            if (LaunchOptions.getOptionValue(LaunchOptions.Option.MAPGEN) != null)
             {
                 String status = handleMapGen();
             }
