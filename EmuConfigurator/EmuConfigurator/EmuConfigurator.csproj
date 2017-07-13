@@ -3,6 +3,14 @@
   <PropertyGroup>
     <OutputType>exe</OutputType>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <Version>0.0.1</Version>
+    <Authors>Zack</Authors>
+    <Company />
+    <Product />
+    <Description />
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>zacklmoore.pfx</AssemblyOriginatorKeyFile>
+    <DelaySign>False</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,17 +31,23 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  
-<PropertyGroup>
-    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
-    <OutputTypeEx>exe</OutputTypeEx>
-    <StartupObject />
-    <NoWin32Manifest>true</NoWin32Manifest>
-</PropertyGroup>
-  
+
+  <ItemGroup>
+    <Folder Include="emulators\" />
+    <Folder Include="mappers\" />
+    <Folder Include="profiles\" />
+  </ItemGroup>
+    
 <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-  <PlatformTarget>x64</PlatformTarget>
+  <PlatformTarget>AnyCPU</PlatformTarget>
+</PropertyGroup>
+    
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+  <PlatformTarget>AnyCPU</PlatformTarget>
+</PropertyGroup>
+    
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <PlatformTarget>AnyCPU</PlatformTarget>
 </PropertyGroup>
 
 </Project>

@@ -51,11 +51,13 @@ namespace EmuConfigurator
             }
             
             //Wait for input
+            /*
             if(launcher == null)
             {
                 Console.WriteLine("Press any key to continue. ALSO REMOVE THIS AFTER DEVELOPMENT!!!!!!!!");
                 Console.ReadKey();
             }
+            */
         }
 
         private static void handleOptions()
