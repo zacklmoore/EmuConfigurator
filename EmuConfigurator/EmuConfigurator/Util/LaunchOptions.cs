@@ -47,7 +47,7 @@ namespace EmuConfigurator
             {
                 int argIndex = argList.IndexOf("--" + option.command);
 
-                if(argIndex != null && argIndex >= 0)
+                if(argIndex >= 0)
                 {
                     if (option.type != null)
                     {
@@ -70,7 +70,7 @@ namespace EmuConfigurator
                                 option.value = Convert.ChangeType(argValue, option.type);
                             } catch(InvalidCastException e)
                             {
-                                return ("Error: Value for argument: '--" + option.command + "' cannot be converted to type '" + option.type.FullName + "'.");
+                                return ("Error: Value for argument: '--" + option.command + "' cannot be converted to type '" + option.type.FullName + "'." + "\n\n" + e.Message);
                             }
                         }
                     } else
@@ -81,7 +81,7 @@ namespace EmuConfigurator
                 }
             }
 
-            return ("");
+            return (returnString);
         }
 
         public static string printHelp()
