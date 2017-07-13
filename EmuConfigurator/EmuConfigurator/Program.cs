@@ -157,7 +157,7 @@ namespace EmuConfigurator
                     while (!IsValidFilename(profName))
                     {
                         System.Console.WriteLine("\nInvalid Profile ID.\n\nEnter New Profile ID: ");
-                        profName = System.Console.ReadLine();
+                        profName = System.Console.ReadLine().Replace("\"", "").Replace("\\", "/");
                     }
                 } while (!Manager.ProfileManager.createProfile(profName));
             }
@@ -173,7 +173,7 @@ namespace EmuConfigurator
                     while (!IsValidFilename(emuName))
                     {
                         System.Console.WriteLine("\nInvalid Emulator ID.\n\nEnter New Emulator ID: ");
-                        emuName = System.Console.ReadLine();
+                        emuName = System.Console.ReadLine().Replace("\"", "").Replace("\\", "/");
                     }
                 } while (!Manager.EmulatorManager.createEmulator(emuName));
             }
@@ -189,7 +189,7 @@ namespace EmuConfigurator
                     while (!IsValidFilename(mapName))
                     {
                         System.Console.WriteLine("\nInvalid Mapper ID.\n\nEnter New Mapper ID: ");
-                        mapName = System.Console.ReadLine();
+                        mapName = System.Console.ReadLine().Replace("\"", "").Replace("\\", "/");
                     }
                 } while (!Manager.MapperManager.createRomProfileMapper(mapName));
             }
@@ -199,7 +199,7 @@ namespace EmuConfigurator
 
         private static string handleMapGen()
         {
-            String mapId = LaunchOptions.getOptionValue(LaunchOptions.Option.MAPGEN);
+            String mapId = LaunchOptions.getOptionValue(LaunchOptions.Option.MAPGEN).Replace("\"", "").Replace("\\", "/");
             List<string> mapperIdList = new List<string>();
             List<RomProfileMapper> mapperList = new List<RomProfileMapper>();
 
