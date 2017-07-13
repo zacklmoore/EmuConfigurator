@@ -9,9 +9,7 @@ namespace EmuConfigurator
     {
         static Profile loadedProfile;
         static Emulator loadedEmulator;
-        static Launcher launcher;
         static LaunchProfile loadedLaunchProf;
-        static String romPath;
 
         static void Main(string[] args)
         {
@@ -29,7 +27,7 @@ namespace EmuConfigurator
             //Process Launch Options
             if(args.Length == 0)
             {
-                System.Console.WriteLine("No profile or options provided. Run with --help for help.");
+                System.Console.WriteLine("No options provided. Run with --help for help.");
             } else
             {
                 LaunchOptions.processOptions(args);
@@ -39,9 +37,15 @@ namespace EmuConfigurator
             handleOptions();
 
             //Eexecute
-            if(loadedProfile != null && loadedEmulator != null)
+            Launcher launcher = null;
+
+            if (loadedProfile != null)
             {
-                launcher = new Launcher(loadedProfile, loadedEmulator, romPath);
+                //Load Emulator
+                loadedEmulator = Manager.EmulatorManager.loadEmulator(loadedProfile.EmulatorId);
+
+                //Build Launcher
+                launcher = new Launcher(loadedProfile, loadedEmulator, loadedLaunchProf.RomPath);
 
                 launcher.launch();
             }
@@ -56,37 +60,35 @@ namespace EmuConfigurator
 
         private static void handleOptions()
         {
-            if(LaunchOptions.getOptionValue(LaunchOptions.Option.HELP) == true)
+            if (LaunchOptions.getOptionValue(LaunchOptions.Option.HELP) == true)
             {
                 System.Console.Write("\n\n" + LaunchOptions.printHelp() + "\n");
 
                 return;
-            } else if (LaunchOptions.getOptionValue(LaunchOptions.Option.JSON) != null)
+            }
+            else if (LaunchOptions.getOptionValue(LaunchOptions.Option.JSON) != null)
             {
-                String status = handleJson();
-
-                if (status != null)
-                {
-                    System.Console.WriteLine("Error when loading JSON file. Error: " + status);
-                }
-            } else if (LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE) != null)
+                String status = loadJson();
+            }
+            else if (LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE) != null)
             {
-                String status = handleProfile();
-
-                if(status != null)
-                {
-                    System.Console.WriteLine("Error when executing profile. Error: " + status);
-                }
-            } else if (LaunchOptions.getOptionValue(LaunchOptions.Option.CREATE) != null)
+                String status = loadProfile();
+            }
+            else if (LaunchOptions.getOptionValue(LaunchOptions.Option.ROM) != null)
+            {
+                loadedLaunchProf.RomPath = LaunchOptions.getOptionValue(LaunchOptions.Option.ROM);
+            }
+            else if (LaunchOptions.getOptionValue(LaunchOptions.Option.CREATE) != null)
             {
                 String status = handleCreate();
-            } else if (LaunchOptions.getOptionValue(LaunchOptions.Option.MAPGEN) != null)
+            }
+            else if (LaunchOptions.getOptionValue(LaunchOptions.Option.MAPGEN) != null)
             {
                 String status = handleMapGen();
             }
         }
 
-        private static String handleJson()
+        private static String loadJson()
         {
             String pathString = LaunchOptions.getOptionValue(LaunchOptions.Option.JSON);
 
@@ -101,26 +103,25 @@ namespace EmuConfigurator
             return null;
         }
 
-        private static String handleProfile()
+        private static String loadProfile()
         {
-            if (LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE) != null)
+            if (loadedLaunchProf != null)
             {
-                String profileId = LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE);
-                profileId.Replace("\"", "");
+                String profileId = loadedLaunchProf.ProfileId.Replace("\"", "");
                 loadedProfile = Manager.ProfileManager.loadProfile(LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE));
-            } else if(loadedLaunchProf != null)
-            {
-                String profileId = loadedLaunchProf.ProfileId;
-                profileId.Replace("\"", "");
-                loadedProfile = Manager.ProfileManager.loadProfile(loadedLaunchProf.ProfileId);
             }
+            
+            return null;
+        }
 
-            if(loadedProfile != null)
+        private static String loadEmulator()
+        {
+            if (loadedProfile != null)
             {
                 String emuId = loadedProfile.EmulatorId.Replace("\"", "");
                 loadedEmulator = Manager.EmulatorManager.loadEmulator(loadedProfile.EmulatorId);
             }
-            
+
             return null;
         }
 
