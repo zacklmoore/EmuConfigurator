@@ -9,7 +9,9 @@ namespace EmuConfigurator
     {
         static Profile loadedProfile;
         static Emulator loadedEmulator;
-        static LaunchProfile loadedLaunchProf;
+        static LaunchProfile loadedLaunchProf = new LaunchProfile();
+        static Launcher launcher;
+        static bool doLaunch = false;
 
         static void Main(string[] args)
         {
@@ -35,21 +37,31 @@ namespace EmuConfigurator
 
             //Handle Launch Options
             handleOptions();
+                        
+            //Load Profile
+            loadProfile();
 
-            //Eexecute
-            Launcher launcher = null;
+            //Load Emulator
+            loadEmulator();
 
-            if (loadedProfile != null)
+            //Build Launcher
+            if (loadedProfile != null && loadedEmulator != null)
             {
-                //Load Emulator
-                loadedEmulator = Manager.EmulatorManager.loadEmulator(loadedProfile.EmulatorId);
-
-                //Build Launcher
                 launcher = new Launcher(loadedProfile, loadedEmulator, loadedLaunchProf.RomPath);
-
-                launcher.launch();
             }
-            
+
+            //Execute
+            if(launcher != null)
+            {
+                launcher.launch();
+            } else if(doLaunch)
+            {
+                //Pause to show error
+                Console.WriteLine("An error occurred. Press any key to continue.");
+                Console.WriteLine("DEBUG. WORKING DIR: " + System.IO.Directory.GetCurrentDirectory());
+                Console.ReadKey();
+            }
+
             //Wait for input
             /*
             if(launcher == null)
@@ -71,14 +83,17 @@ namespace EmuConfigurator
             else if (LaunchOptions.getOptionValue(LaunchOptions.Option.JSON) != null)
             {
                 String status = loadJson();
+                doLaunch = true;
             }
             else if (LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE) != null)
             {
-                String status = loadProfile();
+                loadedLaunchProf.ProfileId = LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE);
+                doLaunch = true;
             }
             else if (LaunchOptions.getOptionValue(LaunchOptions.Option.ROM) != null)
             {
                 loadedLaunchProf.RomPath = LaunchOptions.getOptionValue(LaunchOptions.Option.ROM);
+                doLaunch = true;
             }
             else if (LaunchOptions.getOptionValue(LaunchOptions.Option.CREATE) != null)
             {
@@ -107,10 +122,10 @@ namespace EmuConfigurator
 
         private static String loadProfile()
         {
-            if (loadedLaunchProf != null)
+            if (loadedLaunchProf.ProfileId != null)
             {
-                String profileId = loadedLaunchProf.ProfileId.Replace("\"", "");
-                loadedProfile = Manager.ProfileManager.loadProfile(LaunchOptions.getOptionValue(LaunchOptions.Option.PROFILE));
+                String profileId = loadedLaunchProf.ProfileId.Replace("\"", "").Replace("\\", "/");
+                loadedProfile = Manager.ProfileManager.loadProfile(profileId);
             }
             
             return null;
@@ -120,8 +135,8 @@ namespace EmuConfigurator
         {
             if (loadedProfile != null)
             {
-                String emuId = loadedProfile.EmulatorId.Replace("\"", "");
-                loadedEmulator = Manager.EmulatorManager.loadEmulator(loadedProfile.EmulatorId);
+                String emuId = loadedProfile.EmulatorId.Replace("\"", "").Replace("\\", "/");
+                loadedEmulator = Manager.EmulatorManager.loadEmulator(emuId);
             }
 
             return null;
